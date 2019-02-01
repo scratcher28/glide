@@ -25,6 +25,12 @@ class Server
     protected $sourcePathPrefix;
 
     /**
+     * Custom filename hash.
+     * @var string
+     */    
+    protected $customFilenameHash = false;
+
+    /**
      * Cache file system.
      * @var FilesystemInterface
      */
@@ -155,6 +161,15 @@ class Server
     }
 
     /**
+     * Set custom filename hash.
+     * @param string
+     */
+    public function setCustomFilenameHash($hash)
+    {
+        $this->customFilenameHash = $hash;
+    }
+
+    /**
      * Check if a source file exists.
      * @param  string $path Image path.
      * @return bool   Whether the source file exists.
@@ -268,12 +283,15 @@ class Server
             $sourcePath = substr($sourcePath, strlen($this->sourcePathPrefix) + 1);
         }
 
-        $params = $this->getAllParams($params);
-        unset($params['s'], $params['p']);
-        ksort($params);
-
-        $md5 = md5($sourcePath.'?'.http_build_query($params));
-
+        if ($this->customFilenameHash) {
+            $md5 = $this->customFilenameHash;
+        } else {
+            $params = $this->getAllParams($params);
+            unset($params['s'], $params['p']);
+            ksort($params);
+            $md5 = md5($sourcePath.'?'.http_build_query($params));
+        }
+        
         $cachedPath = $this->groupCacheInFolders ? $sourcePath.'/'.$md5 : $md5;
 
         if ($this->cachePathPrefix) {

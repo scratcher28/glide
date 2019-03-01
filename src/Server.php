@@ -481,9 +481,7 @@ class Server
     public function outputImage($path, array $params)
     {
         
-        if ($params['retina']) {
-            $path = str_replace('@2x', '', $path);
-        }        
+        $path = str_replace('@2x', '', $path);       
         
         $path = $this->makeImage($path, $params);
 

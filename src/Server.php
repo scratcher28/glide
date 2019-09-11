@@ -480,9 +480,7 @@ class Server
      */
     public function outputImage($path, array $params)
     {
-        
-        $path = str_replace('@2x', '', $path);       
-        
+           
         $path = $this->makeImage($path, $params);
 
         header('Content-Type:'.$this->cache->getMimetype($path));
@@ -509,6 +507,9 @@ class Server
      */
     public function makeImage($path, array $params)
     {
+        
+        $path = str_replace('@2x', '', $path); // scratcher28 fix
+        
         $sourcePath = $this->getSourcePath($path);
         $cachedPath = $this->getCachePath($path, $params);
 
